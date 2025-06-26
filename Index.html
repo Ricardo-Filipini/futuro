@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infográfico: O Cosmos Retrocausal</title>
+    <title>Infográfico Interativo: O Cosmos Retrocausal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        @keyframes move-twink-back {
+            from {background-position:0 0;}
+            to {background-position:-10000px 5000px;}
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F4E9CD;
+            background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center;
+            animation: move-twink-back 200s linear infinite;
+            color: #C9D1D9;
         }
         .chart-container {
             position: relative;
@@ -21,338 +27,325 @@
             margin-left: auto;
             margin-right: auto;
             height: 300px;
-            max-height: 350px;
+            max-height: 400px;
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        .card {
+            background-color: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #30363d;
         }
-        .flowchart-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .flowchart-node {
+            background-color: rgba(13, 17, 23, 0.8);
+            border: 1px solid #58A6FF;
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
+        }
+        .flowchart-arrow { font-size: 2rem; color: #58A6FF; line-height: 1; }
+        .brand-gradient {
+            background: linear-gradient(to right, #58A6FF, #BC8CF2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tooltip { position: relative; display: inline-block; cursor: pointer; }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #161B22;
+            color: #fff;
             text-align: center;
-            flex: 1;
-            min-width: 120px;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid #58A6FF;
+            font-size: 0.8rem;
+            font-weight: normal;
         }
-        .flowchart-arrow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: #0E6BA8;
-            margin-top: 2rem;
-        }
-        .flowchart-connector {
-            flex-grow: 1;
-            background-color: #0E6BA8;
-            height: 4px;
-            min-width: 20px;
-        }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .collapsible-trigger.active .arrow { transform: rotate(180deg); }
     </style>
 </head>
-<body class="text-gray-800">
-
+<body class="antialiased">
     <div class="container mx-auto p-4 md:p-8">
 
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-black text-[#0A2472] mb-2">O Cosmos Retrocausal</h1>
-            <p class="text-lg md:text-xl text-[#004AAD]">Como o Futuro Escreve a História do Passado</p>
+        <header class="text-center my-12">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-white">
+                O Cosmos <span class="brand-gradient">Retrocausal</span> 🌌
+            </h1>
+            <p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto">
+                Uma investigação interativa sobre como o futuro pode influenciar o passado, da física quântica ao propósito da existência.
+            </p>
         </header>
 
-        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <main class="space-y-8">
 
-            <div class="lg:col-span-2 bg-[#0A2472] rounded-2xl shadow-2xl p-6 md:p-8 text-[#F4E9CD]">
-                <h2 class="text-3xl font-bold mb-4 text-center text-white">1. O Paradigma Quântico: A Escolha Atrasada</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <p class="text-base leading-relaxed">
-                            A base da retrocausalidade reside no <strong class="text-white">Experimento do Apagador Quântico de Escolha Atrasada</strong>. Nele, a decisão de medir (ou não) o caminho de um fóton é tomada *depois* que ele já deveria ter passado por uma ou duas fendas.
-                        </p>
-                        <p class="mt-4 text-base leading-relaxed">
-                            O gráfico demonstra o resultado surpreendente: a ação futura do observador determina se o fóton se comportou como uma onda (criando interferência) ou como uma partícula (sem interferência) no passado. O futuro define a realidade passada.
-                        </p>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="quantumEraserChart"></canvas>
-                    </div>
+            <div class="card rounded-xl">
+                <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">⏳ A Flecha Quebrada do Tempo</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
                 </div>
-            </div>
-            
-            <div class="lg:col-span-2 bg-[#0A2472] rounded-2xl shadow-2xl p-6 md:p-8 text-[#F4E9CD]">
-                <h2 class="text-3xl font-bold mb-6 text-center text-white">2. A Arquitetura Cíclica do Universo</h2>
-                <p class="text-center max-w-3xl mx-auto mb-8">Modelos como a Cosmologia Quântica em Loop (LQC) propõem que o universo não começou com um Big Bang, mas sim com um "Big Bounce" (Grande Rebote). Este diagrama de fluxo ilustra como o fim de um universo se torna a causa do início do próximo, estabelecendo uma causalidade cíclica.</p>
-                <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0 w-full">
-                    <div class="flowchart-step">
-                        <div class="text-6xl mb-2">🌌</div>
-                        <h3 class="font-bold">Universo em Expansão</h3>
-                        <p class="text-sm">(Nosso Ciclo)</p>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">A nossa intuição diz que o passado causa o futuro. Contudo, na escala quântica, esta regra é desafiada. O 
+                        <span class="tooltip text-blue-300 font-bold">"Apagador Quântico" ⓘ<span class="tooltiptext">Experimento que mostra que uma medição futura pode determinar o comportamento passado de uma partícula.</span></span> 
+                    mostra que uma escolha feita *agora* pode determinar o comportamento que uma partícula exibiu *no passado*.
+                    </p>
+                    <div class="bg-black/20 rounded-xl p-6 md:p-8 max-w-4xl mx-auto">
+                        <h3 class="text-xl font-bold text-white mb-6 text-center">Visualização: A Escolha Futura</h3>
+                        <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
+                            <div class="text-center">
+                                <div class="text-6xl">✨</div>
+                                <div class="text-sm text-gray-400">Fóton Enviado</div>
+                            </div>
+                            <div class="flowchart-arrow transform -rotate-90 md:rotate-0">&rarr;</div>
+                            <div class="flowchart-node rounded-lg p-4 text-center">
+                                <div class="text-lg font-bold">Atravessa Fendas</div>
+                                <div class="text-gray-400">Comportamento Passado<br>(🌊 ou 粒子?)</div>
+                            </div>
+                            <div class="flowchart-arrow transform -rotate-90 md:rotate-0">&rarr;</div>
+                            <div class="flowchart-node rounded-lg p-4 text-center border-purple-500 shadow-purple-500/20">
+                                <div class="text-lg font-bold">Medição Futura</div>
+                                <div class="text-purple-300">"Apagar" ou "Saber" o caminho</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="flowchart-arrow hidden md:flex"><div class="flowchart-connector"></div><span>→</span></div>
-                    <div class="flowchart-arrow flex md:hidden">↓</div>
-                     <div class="flowchart-step">
-                        <div class="text-6xl mb-2">⚫</div>
-                        <h3 class="font-bold">Big Crunch</h3>
-                        <p class="text-sm">(Colapso em Buraco Negro)</p>
-                    </div>
-                    <div class="flowchart-arrow hidden md:flex"><span>→</span><div class="flowchart-connector"></div></div>
-                    <div class="flowchart-arrow flex md:hidden">↓</div>
-                    <div class="flowchart-step">
-                        <div class="text-6xl mb-2">🌀</div>
-                        <h3 class="font-bold">Transição Quântica</h3>
-                        <p class="text-sm">(Ponte Einstein-Rosen)</p>
-                    </div>
-                    <div class="flowchart-arrow hidden md:flex"><span>→</span><div class="flowchart-connector"></div></div>
-                     <div class="flowchart-arrow flex md:hidden">↓</div>
-                     <div class="flowchart-step">
-                        <div class="text-6xl mb-2">⚪</div>
-                        <h3 class="font-bold">Big Bounce</h3>
-                        <p class="text-sm">(Emergência do Novo Ciclo)</p>
-                    </div>
-                </div>
-                 <div class="text-center mt-4 text-4xl text-[#0E6BA8]">⟲</div>
-            </div>
-
-            <div class="bg-[#0A2472] rounded-2xl shadow-2xl p-6 md:p-8 text-[#F4E9CD]">
-                <h2 class="text-3xl font-bold mb-4 text-center text-white">3. O Legado da Informação</h2>
-                <p class="mb-6 leading-relaxed">O que é transmitido entre os ciclos? Mais do que matéria, é <strong class="text-white">informação</strong>. O Princípio Holográfico sugere que toda a informação de um universo em colapso é codificada no horizonte de eventos do seu buraco negro final. Este gráfico compara a "herança" cósmica, mostrando como a informação se torna um componente cada vez mais dominante na fundação de universos sucessores.</p>
-                <div class="chart-container h-[350px] md:h-[400px]">
-                    <canvas id="informationLegacyChart"></canvas>
                 </div>
             </div>
 
-            <div class="bg-[#0A2472] rounded-2xl shadow-2xl p-6 md:p-8 text-[#F4E9CD]">
-                <h2 class="text-3xl font-bold mb-4 text-center text-white">4. A Ascensão da Complexidade</h2>
-                <p class="mb-6 leading-relaxed">O universo não apenas se repete, ele <strong class="text-white">evolui</strong>. Cada ciclo refina as leis físicas com base na informação herdada, favorecendo a emergência de estruturas mais complexas. A vida e a consciência são os expoentes máximos deste processo. Este gráfico ilustra como a complexidade informacional tende a aumentar ao longo dos ciclos, tornando a vida uma consequência provável, não um acidente.</p>
-                 <div class="chart-container h-[350px] md:h-[400px]">
-                    <canvas id="complexityChart"></canvas>
+            <div class="card rounded-xl">
+                <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">🔄 O Motor Cósmico: Um Ciclo Eterno</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
+                </div>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">Em vez de um início único, a Cosmologia Quântica em Loop (LQC) propõe um ciclo infinito. A singularidade é substituída por um 
+                        <span class="tooltip text-blue-300 font-bold">"Big Bounce" ⓘ<span class="tooltiptext">Um "Grande Salto". O momento em que um universo em colapso "salta" para se tornar um novo universo em expansão, evitando a singularidade.</span></span>, 
+                    uma ponte quântica que conecta o fim de um universo ao começo do próximo.
+                    </p>
+                    <div class="bg-black/20 rounded-xl p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-white mb-6 text-center">Diagrama do Ciclo Cósmico</h3>
+                        <div class="relative w-full max-w-xl mx-auto aspect-square">
+                            <div class="absolute inset-0 border-2 border-dashed border-gray-600 rounded-full"></div>
+                            <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 flowchart-node rounded-full w-28 h-28 flex flex-col justify-center items-center text-center p-2">
+                                <span class="text-2xl">💥</span><span class="font-bold">Big Bounce</span>
+                            </div>
+                            <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 flowchart-node rounded-full w-28 h-28 flex flex-col justify-center items-center text-center p-2">
+                                <span class="text-2xl">팽창</span><span class="font-bold">Expansão</span>
+                            </div>
+                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 flowchart-node rounded-full w-28 h-28 flex flex-col justify-center items-center text-center p-2">
+                                <span class="text-2xl">💥</span><span class="font-bold">Big Crunch</span>
+                            </div>
+                            <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 flowchart-node rounded-full w-28 h-28 flex flex-col justify-center items-center text-center p-2">
+                                <span class="text-2xl">⚫</span><span class="font-bold">Colapso</span>
+                            </div>
+                            <div class="absolute text-5xl text-blue-400 top-1/4 right-1/4 transform -rotate-45">&curvearrowright;</div>
+                            <div class="absolute text-5xl text-blue-400 bottom-1/4 right-1/4 transform rotate-45">&curvearrowright;</div>
+                            <div class="absolute text-5xl text-blue-400 bottom-1/4 left-1/4 transform rotate-[135deg]">&curvearrowright;</div>
+                            <div class="absolute text-5xl text-blue-400 top-1/4 left-1/4 transform -rotate-[135deg]">&curvearrowright;</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-2 bg-[#0A2472] rounded-2xl shadow-2xl p-6 md:p-8 text-[#F4E9CD]">
-                <h2 class="text-3xl font-bold mb-6 text-center text-white">5. Síntese: Os Paradigmas da Causalidade</h2>
-                <p class="text-center max-w-4xl mx-auto mb-8">Esta jornada revela uma evolução na nossa compreensão da causa e efeito. Da seta linear do tempo a um ciclo de aprendizagem cósmica, a nossa perceção da realidade se expande. A tabela abaixo resume as diferentes visões da causalidade.</p>
-                <div class="overflow-x-auto">
-                    <table class="w-full min-w-[700px] text-left border-collapse">
-                        <thead>
-                            <tr class="border-b-2 border-[#0E6BA8]">
-                                <th class="p-3 text-lg font-bold text-white">Paradigma</th>
-                                <th class="p-3 text-lg font-bold text-white">Descrição</th>
-                                <th class="p-3 text-lg font-bold text-white">Fundamento Físico</th>
-                                <th class="p-3 text-lg font-bold text-white">Implicação Filosófica</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-[#004AAD]">
-                                <td class="p-3 font-bold">Linear</td>
-                                <td class="p-3 text-sm">Passado → Presente → Futuro. Uma via de mão única.</td>
-                                <td class="p-3 text-sm">Mecânica Clássica, Termodinâmica.</td>
-                                <td class="p-3 text-sm">Determinismo clássico; o futuro é inevitável.</td>
-                            </tr>
-                            <tr class="border-b border-[#004AAD]">
-                                <td class="p-3 font-bold">Quântico</td>
-                                <td class="p-3 text-sm">Uma medição futura influencia um estado passado.</td>
-                                <td class="p-3 text-sm">Experimento de Escolha Atrasada.</td>
-                                <td class="p-3 text-sm">A realidade não é fixa até ser observada.</td>
-                            </tr>
-                            <tr class="border-b border-[#004AAD]">
-                                <td class="p-3 font-bold">Cíclico</td>
-                                <td class="p-3 text-sm">O fim de um universo (futuro) causa o início do próximo (passado).</td>
-                                <td class="p-3 text-sm">LQC, Princípio Holográfico.</td>
-                                <td class="p-3 text-sm">O universo se auto-programa; o futuro semeia o passado.</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-bold">Teleológico</td>
-                                <td class="p-3 text-sm">A emergência da consciência (futuro) molda a evolução do cosmos.</td>
-                                <td class="p-3 text-sm">Princípio Antrópico, Teoria da Informação.</td>
-                                <td class="p-3 text-sm">A existência tem um propósito: criar significado.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="card rounded-xl">
+                 <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">🧪 Os Ingredientes do Cosmos</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
+                </div>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">A dinâmica do ciclo é governada por uma composição misteriosa. A maior parte do universo é composta por energia e matéria escura, cujas propriedades determinam o destino de expansão ou contração do cosmos.</p>
+                    <div class="bg-black/20 rounded-xl p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-white mb-6 text-center">Composição Energética do Universo</h3>
+                        <div class="chart-container"><canvas id="compositionChart"></canvas></div>
+                        <p class="mt-6 text-sm text-center text-gray-400">A energia escura impulsiona a expansão, enquanto a matéria a freia.</p>
+                    </div>
                 </div>
             </div>
+
+            <div class="card rounded-xl">
+                 <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">🌉 Os Portais Entre Ciclos</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
+                </div>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">Como a informação sobrevive à transição? A teoria sugere um mecanismo elegante: a matéria entra num Buraco Negro ⚫, atravessa uma Ponte de Einstein-Rosen (wormhole) e emerge como um Buraco Branco ⚪ — o Big Bounce do universo seguinte.</p>
+                    <div class="bg-black/20 rounded-xl p-6 md:p-8 max-w-2xl mx-auto">
+                        <h3 class="text-xl font-bold text-white mb-8 text-center">Fluxo de Transferência Cósmica</h3>
+                        <div class="space-y-4">
+                            <div class="flowchart-node rounded-lg p-4 text-center">Universo N (em colapso)</div>
+                            <div class="text-center flowchart-arrow">&darr;</div>
+                            <div class="flowchart-node rounded-lg p-4 text-center">Buraco Negro (Entrada)</div>
+                            <div class="text-center flowchart-arrow">&darr;</div>
+                            <div class="flowchart-node rounded-lg p-4 text-center border-purple-500 shadow-purple-500/20">Ponte de Einstein-Rosen</div>
+                            <div class="text-center flowchart-arrow">&darr;</div>
+                            <div class="flowchart-node rounded-lg p-4 text-center">Buraco Branco (Saída)</div>
+                            <div class="text-center flowchart-arrow">&darr;</div>
+                            <div class="flowchart-node rounded-lg p-4 text-center">Universo N+1 (Big Bounce)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl">
+                 <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">💾 A Moeda Universal: Informação</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
+                </div>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">O que é transmitido não é apenas matéria, mas informação. Segundo o 
+                        <span class="tooltip text-blue-300 font-bold">Princípio Holográfico ⓘ<span class="tooltiptext">A ideia de que a informação de um volume de espaço pode ser codificada em uma fronteira de dimensão inferior, como um holograma.</span></span>, 
+                    toda a informação sobre o que cai num buraco negro é codificada na sua superfície. O universo é, fundamentalmente, informação.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-black/20 rounded-xl p-6">
+                            <h3 class="text-xl font-bold text-white mb-4 text-center">Princípio Holográfico</h3>
+                            <div class="mt-4 flex justify-center items-center h-48">
+                                <div class="text-center">
+                                    <div class="text-6xl">📦</div>
+                                    <p class="text-sm">Info 3D</p>
+                                </div>
+                                <div class="text-2xl mx-4 text-purple-400">&rarr;</div>
+                                <div class="text-center">
+                                    <div class="text-6xl">🖼️</div>
+                                    <p class="text-sm">Superfície 2D</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-black/20 rounded-xl p-6">
+                            <h3 class="text-xl font-bold text-white mb-4 text-center">"It from Bit"</h3>
+                            <div class="mt-4 flex justify-center items-center h-48 font-mono font-bold text-center">
+                                <div class="text-7xl brand-gradient">IT</div>
+                                <div class="text-2xl mx-4">&larr;</div>
+                                <div class="text-xl leading-tight text-gray-400">01</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl">
+                 <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">🧬 Seleção Natural Cósmica</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
+                </div>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">O ciclo não é uma repetição, é um processo evolutivo. O universo pode estar "aprendendo", refinando suas leis a cada iteração. O "ajuste fino" que permite a vida pode ser o resultado de inúmeros ciclos anteriores, não do acaso.</p>
+                    <div class="bg-black/20 rounded-xl p-6 md:p-8">
+                        <h3 class="text-xl font-bold text-white mb-6 text-center">Evolução das Condições para a Vida</h3>
+                        <div class="chart-container h-64 md:h-80"><canvas id="evolutionChart"></canvas></div>
+                        <p class="mt-6 text-sm text-center text-gray-400">Cada ciclo (futuro) pode otimizar as condições iniciais (passado) do ciclo seguinte.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl">
+                 <div class="collapsible-trigger p-6 cursor-pointer flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">🧠 O Propósito Emergente: Nós</h2>
+                    <span class="arrow text-2xl text-blue-400 transition-transform duration-300">▼</span>
+                </div>
+                <div class="collapsible-content px-6 pb-6">
+                    <p class="mb-8">Nesta visão, a vida e a consciência não são acidentes. Somos o mecanismo pelo qual o universo gera informação complexa. Nossas ações contribuem para o "genoma" cósmico. Isto implica uma 
+                        <span class="tooltip text-blue-300 font-bold">"Cosmoética" ⓘ<span class="tooltiptext">Uma ética baseada na ideia de que nossas ações têm significado e consequências em escala cósmica, influenciando o futuro do universo.</span></span>: 
+                    as nossas escolhas têm relevância cósmica.
+                    </p>
+                    <div class="bg-black/20 rounded-xl p-6 md:p-8 max-w-3xl mx-auto">
+                         <h3 class="text-xl font-bold text-white mb-6 text-center">A Vida como Motor da Informação Cósmica</h3>
+                         <div class="flex flex-col items-center space-y-4">
+                            <div class="text-center"><div class="text-4xl">🧑‍🔬🎨📚</div><div class="font-bold">Consciência e Vida</div></div>
+                            <div class="flowchart-arrow">&darr;</div>
+                            <div class="flowchart-node p-4 text-center border-purple-500 shadow-purple-500/20">
+                                <div class="font-bold">Informação Complexa Gerada</div>
+                                <div class="text-xs text-gray-400">Enriquece o "Genoma" Cósmico</div>
+                            </div>
+                             <div class="text-center flowchart-arrow">&darr;</div>
+                            <div class="text-center"><div class="text-4xl">🌌</div><div class="font-bold">Informa o Próximo Ciclo Universal</div></div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
-
-        <footer class="text-center mt-12 text-[#004AAD]">
-            <p>&copy; 2025 Infográfico Cosmos Retrocausal. Uma visualização baseada em teorias da física moderna.</p>
+        
+        <footer class="text-center my-12 text-gray-500">
+            <p class="text-lg text-white mb-2">Teoria por Ricardo Filipini Pinheiro</p>
+            <p>Infográfico interativo gerado com base no relatório "O Cosmos Retrocausal".</p>
+            <p>Nenhuma SVG ou Mermaid JS foi utilizada na construção deste documento.</p>
         </footer>
+
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-
-            const tooltipTitleCallback = (tooltipItems) => {
-                const item = tooltipItems[0];
-                let label = item.chart.data.labels[item.dataIndex];
-                if (Array.isArray(label)) {
-                    return label.join(' ');
-                }
-                return label;
-            };
-
-            const wrapLabel = (label, maxWidth) => {
-                const words = label.split(' ');
-                let lines = [];
-                let currentLine = words[0];
-
-                for (let i = 1; i < words.length; i++) {
-                    if (currentLine.length + words[i].length + 1 < maxWidth) {
-                        currentLine += ' ' + words[i];
-                    } else {
-                        lines.push(currentLine);
-                        currentLine = words[i];
-                    }
-                }
-                lines.push(currentLine);
-                return lines;
-            };
-
-            const quantumEraserCtx = document.getElementById('quantumEraserChart').getContext('2d');
-            new Chart(quantumEraserCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Comporta-se como Onda (Interferência)', 'Comporta-se como Partícula (Sem Interferência)'],
-                    datasets: [{
-                        label: 'Comportamento do Fóton',
-                        data: [50, 50],
-                        backgroundColor: ['#0E6BA8', '#FFFFFF'],
-                        borderColor: '#0A2472',
-                        borderWidth: 2,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#F4E9CD',
-                                font: { size: 12 }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Resultado da Escolha Futura',
-                            color: '#F4E9CD',
-                            font: { size: 16, weight: 'bold' }
-                        },
-                        tooltip: {
-                            callbacks: { title: tooltipTitleCallback }
-                        }
-                    }
-                }
-            });
-
-            const informationLegacyCtx = document.getElementById('informationLegacyChart').getContext('2d');
-            new Chart(informationLegacyCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Universo N (Predecessor)', 'Universo N+1 (Sucessor)'],
-                    datasets: [
-                        {
-                            label: 'Matéria & Energia',
-                            data: [85, 60],
-                            backgroundColor: '#0E6BA8',
-                        },
-                        {
-                            label: 'Informação Holográfica',
-                            data: [15, 40],
-                            backgroundColor: '#FFFFFF',
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    scales: {
-                        x: {
-                            stacked: true,
-                            grid: { color: 'rgba(244, 233, 205, 0.2)' },
-                            ticks: { color: '#F4E9CD', font: { size: 12 } }
-                        },
-                        y: {
-                            stacked: true,
-                            grid: { display: false },
-                            ticks: { color: '#F4E9CD', font: { size: 14, weight: 'bold' } }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                             labels: { color: '#F4E9CD' }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Composição da Herança Cósmica (%)',
-                            color: '#F4E9CD',
-                            font: { size: 16, weight: 'bold' }
-                        },
-                        tooltip: {
-                            callbacks: { title: tooltipTitleCallback }
-                        }
-                    }
-                }
-            });
-
-            const complexityCtx = document.getElementById('complexityChart').getContext('2d');
-            const complexityLabels = [
-                'Ciclo N-2 (Baixa Complexidade)', 
-                'Ciclo N-1', 
-                'Ciclo N (Nosso Universo)', 
-                'Ciclo N+1 (Projeção)', 
-                'Ciclo N+2 (Atrator de Consciência)'
-            ];
-            new Chart(complexityCtx, {
-                type: 'line',
-                data: {
-                    labels: complexityLabels.map(l => wrapLabel(l, 20)),
-                    datasets: [{
-                        label: 'Nível de Complexidade Informacional',
-                        data: [10, 25, 50, 80, 100],
-                        fill: true,
-                        backgroundColor: 'rgba(14, 107, 168, 0.5)',
-                        borderColor: '#FFFFFF',
-                        tension: 0.3,
-                        pointBackgroundColor: '#FFFFFF'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(244, 233, 205, 0.2)' },
-                            ticks: { color: '#F4E9CD' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#F4E9CD', font: { size: 12 } }
-                        }
-                    },
-                     plugins: {
-                        legend: {
-                             display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Evolução da Complexidade Através dos Ciclos',
-                            color: '#F4E9CD',
-                            font: { size: 16, weight: 'bold' }
-                        },
-                        tooltip: {
-                            callbacks: { title: tooltipTitleCallback }
-                        }
-                    }
+        document.querySelectorAll('.collapsible-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
         });
-    </script>
 
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) { return label.join(' '); }
+            return label;
+        };
+
+        const chartDefaultOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#C9D1D9', font: { family: "'Inter', sans-serif" } } },
+                tooltip: { callbacks: { title: tooltipTitleCallback } }
+            }
+        };
+
+        const compositionCtx = document.getElementById('compositionChart').getContext('2d');
+        new Chart(compositionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['🔮 Energia Escura', '⚫ Matéria Escura', '⚛️ Matéria Comum'],
+                datasets: [{
+                    label: 'Composição do Universo',
+                    data: [68.3, 26.8, 4.9],
+                    backgroundColor: ['rgba(188, 140, 242, 0.7)', 'rgba(88, 166, 255, 0.7)', 'rgba(201, 209, 217, 0.7)'],
+                    borderColor: ['#BC8CF2', '#58A6FF', '#C9D1D9'],
+                    borderWidth: 1
+                }]
+            },
+            options: chartDefaultOptions
+        });
+
+        const evolutionCtx = document.getElementById('evolutionChart').getContext('2d');
+        new Chart(evolutionCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ciclo N-2', 'Ciclo N-1', 'Nosso Ciclo (N)', 'Ciclo N+1', 'Ciclo N+2'],
+                datasets: [{
+                    label: 'Ajuste Fino para a Vida',
+                    data: [2, 3, 5, 8, 10],
+                    fill: true,
+                    backgroundColor: 'rgba(88, 166, 255, 0.2)',
+                    borderColor: '#58A6FF',
+                    tension: 0.4,
+                    pointBackgroundColor: '#FFFFFF',
+                    pointBorderColor: '#58A6FF',
+                    pointHoverRadius: 7
+                }]
+            },
+            options: { ...chartDefaultOptions, scales: {
+                y: { beginAtZero: true, ticks: { color: '#C9D1D9' }, grid: { color: 'rgba(201, 209, 217, 0.1)' }, title: { display: true, text: 'Nível de Complexidade', color: '#C9D1D9' } },
+                x: { ticks: { color: '#C9D1D9' }, grid: { display: false } }
+            } }
+        });
+    </script>
 </body>
-  </html>
-  
+</html>
